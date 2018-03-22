@@ -1,0 +1,47 @@
+
+ <section class="sort">
+ 	<label for="">Order By :</label>
+ 	<select (change)="sortStockBy = $event.target.value">
+		 <option value="name">Name</option>
+		 <option value="currentPrice">Price</option>
+		 <option value="priceIndex">Price Index</option>
+ 	</select>
+ 	<label for="">Descending ? :</label>
+ 	<input type="checkbox" (change)="sortStockDescending = $event.target.checked">
+ </section>
+ <app-stock-edit (create)="onNewStock($event)" [stockEditDetail]="stockToDisplay"></app-stock-edit>
+
+ <br>
+
+ <div class="container"
+     fxLayout
+     fxLayout.xs="column"
+     fxLayoutAlign="left">
+	 <div class="item item-1" fxFlex="40%">
+			<section class="list">
+					<ol>
+						<li *ngFor="let stock of ( stocks | sort:sortStockBy:sortStockDescending )">
+						   <span class="stockname" title="{{stock.name}}"
+						   		(click)="onStockNameClick(stock)">{{stock.name}}</span>
+						   <span class="stockprice" title="{{stock.currentPrice}}"
+						   [ngClass]="{stockprice_red : stock.priceIndex <0, 
+							stockprice_green : stock.priceIndex >0}">{{stock.currentPrice}}</span> 
+						  <div class="datetime">{{stock.lastUpdatedTime | elapsed}}</div> 
+						</li>
+					</ol>
+			   </section>
+	  
+	</div>
+	<div class="item item-2">
+		<i>Click on stock name and the price history will be displayed below...</i>
+		  <fusioncharts
+		  	  [id]="stocksHistoryChartId"
+			  [width]="width"
+			  [height]="height"
+			  [type]="type"
+			  [dataFormat]="dataFormat"
+			  [dataSource]="dataSource"
+		  >
+		  </fusioncharts>
+	</div>
+</div>
